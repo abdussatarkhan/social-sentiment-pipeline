@@ -1,0 +1,180 @@
+# ==============================================================================
+# Real-Time Social Listening & Brand Sentiment Pipeline Configuration
+# ==============================================================================
+
+app:
+  name: "social-sentiment-pipeline"
+  version: "1.0.0"
+  environment: "production"
+  brand_target: "ApexCloud"
+  brand_aliases:
+    - "apexcloud"
+    - "apex cloud"
+    - "@apexcloud"
+    - "#apexcloud"
+    - "apex_cloud"
+
+# ------------------------------------------------------------------------------
+# Apache Kafka & Message Streaming
+# ------------------------------------------------------------------------------
+kafka:
+  bootstrap_servers: "localhost:9092"
+  client_id: "sentiment-pipeline-core"
+  consumer_group: "sentiment-nlp-workers"
+  auto_offset_reset: "latest"
+  enable_auto_commit: false
+  max_poll_records: 200
+  topics:
+    raw_stream: "social-raw-stream"
+    enriched_stream: "social-enriched-stream"
+    crisis_alerts: "social-crisis-alerts"
+    dead_letter: "social-dead-letter-queue"
+
+# ------------------------------------------------------------------------------
+# PostgreSQL Database (Persistence & Analytics)
+# ------------------------------------------------------------------------------
+postgres:
+  host: "localhost"
+  port: 5432
+  dbname: "sentiment_db"
+  user: "sentiment_user"
+  password: "sentiment_secure_password"
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+
+# ------------------------------------------------------------------------------
+# Elasticsearch (Full-Text Search & Faceted Analytics)
+# ------------------------------------------------------------------------------
+elasticsearch:
+  host: "localhost"
+  port: 9200
+  scheme: "http"
+  index_prefix: "social_sentiment"
+  request_timeout: 30
+  max_retries: 3
+  retry_on_timeout: true
+
+# ------------------------------------------------------------------------------
+# Social Ingestion: Bluesky AT Protocol Firehose
+# ------------------------------------------------------------------------------
+bluesky:
+  firehose_url: "wss://bsky.network/xrpc/com.atproto.sync.subscribeRepos"
+  reconnect_delay_sec: 5
+  max_reconnect_delay_sec: 60
+  backoff_factor: 2.0
+  max_reconnect_attempts: 10
+  batch_size: 50
+  keywords:
+    - "apexcloud"
+    - "apex cloud"
+    - "cloud outage"
+    - "cloud latency"
+    - "downtime"
+    - "cloud api error"
+    - "cloud billing"
+
+# ------------------------------------------------------------------------------
+# Social Ingestion: Reddit API (PRAW)
+# ------------------------------------------------------------------------------
+reddit:
+  client_id: "MOCK_REDDIT_CLIENT_ID"
+  client_secret: "MOCK_REDDIT_CLIENT_SECRET"
+  user_agent: "SocialSentimentPipeline/1.0 by DataTeam"
+  subreddits:
+    - "technology"
+    - "sysadmin"
+    - "cloudcomputing"
+    - "aws"
+    - "devops"
+    - "softwareengineering"
+    - "stocks"
+  keywords:
+    - "apexcloud"
+    - "cloud outage"
+    - "server crash"
+    - "cloud pricing"
+    - "sla breach"
+  check_interval_sec: 2
+
+# ------------------------------------------------------------------------------
+# Text Preprocessing & Cleaning
+# ------------------------------------------------------------------------------
+preprocessing:
+  supported_languages:
+    - "en"
+  min_text_length: 10
+  max_text_length: 1000
+  spam_filter:
+    max_duplicate_char_ratio: 0.4
+    max_url_count: 3
+    min_word_count: 3
+  emoji:
+    replace_with_desc: true
+    demojize_delimiters: [" ", " "]
+
+# ------------------------------------------------------------------------------
+# Aspect-Based Sentiment Model (DistilBERT)
+# ------------------------------------------------------------------------------
+sentiment_model:
+  model_name: "distilbert-base-uncased"
+  checkpoint_path: "models/distilbert_absa_v1"
+  max_seq_length: 128
+  batch_size: 32
+  aspects:
+    - "general"
+    - "product_quality"
+    - "customer_support"
+    - "pricing_value"
+    - "ui_performance"
+  labels:
+    - "negative"
+    - "neutral"
+    - "positive"
+  label_mapping:
+    negative: -1.0
+    neutral: 0.0
+    positive: 1.0
+  confidence_threshold: 0.60
+
+# ------------------------------------------------------------------------------
+# Real-Time CUSUM Crisis Change-Point Detection
+# ------------------------------------------------------------------------------
+crisis_detection:
+  window_minutes: 15
+  min_posts_threshold: 10
+  baseline_sentiment_target: 0.35
+  baseline_std_dev: 0.20
+  slack_allowance_k: 0.50
+  decision_threshold_h: 4.50
+  alert_cooldown_minutes: 60
+  slack_webhook_url: "https://hooks.slack.com/services/MOCK/TOKEN/CRISIS"
+
+# ------------------------------------------------------------------------------
+# Social Network Influence & Amplification (PageRank)
+# ------------------------------------------------------------------------------
+influence_analysis:
+  damping_factor: 0.85
+  max_iterations: 100
+  convergence_tol: 0.00001
+  min_interaction_weight: 1
+  negative_sentiment_threshold: -0.25
+  top_amplifiers_count: 20
+
+# ------------------------------------------------------------------------------
+# Topic Discovery & Clustering (BERTopic)
+# ------------------------------------------------------------------------------
+topic_modeling:
+  min_topic_size: 15
+  nr_topics: 10
+  embedding_model: "all-MiniLM-L6-v2"
+  calculate_probabilities: true
+
+# ------------------------------------------------------------------------------
+# Executive Automated Reporting
+# ------------------------------------------------------------------------------
+reporting:
+  output_dir: "reports"
+  template_path: "templates/daily_report.html"
+  include_charts: true
+  author: "Real-Time NLP Sentiment Automation"

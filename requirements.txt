@@ -1,0 +1,46 @@
+# Core Networking & Streaming
+websockets>=12.0
+cbor2>=5.6.0
+praw>=7.7.1
+kafka-python>=2.0.2
+requests>=2.31.0
+aiohttp>=3.9.5
+
+# Data Processing & Storage
+numpy>=1.26.4
+pandas>=2.2.2
+scipy>=1.13.0
+psycopg2-binary>=2.9.9
+SQLAlchemy>=2.0.30
+elasticsearch>=8.13.0
+pyyaml>=6.0.1
+pydantic>=2.7.1
+python-dotenv>=1.0.1
+
+# NLP, Embeddings & Deep Learning
+torch>=2.2.0
+transformers>=4.40.0
+datasets>=2.19.0
+evaluate>=0.4.2
+accelerate>=0.30.0
+scikit-learn>=1.4.2
+spacy>=3.7.4
+emoji>=2.11.0
+langdetect>=1.0.9
+sentence-transformers>=2.7.0
+bertopic>=0.16.0
+umap-learn>=0.5.6
+hdbscan>=0.8.36
+
+# Graph & Network Analysis
+networkx>=3.3
+
+# Visualization & Reporting
+matplotlib>=3.8.4
+seaborn>=0.13.2
+plotly>=5.22.0
+Jinja2>=3.1.4
+weasyprint>=61.2
+
+# Workflow & Orchestration
+apache-airflow>=2.9.1

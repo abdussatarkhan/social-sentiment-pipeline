@@ -1,0 +1,48 @@
+data/raw/*
+!data/raw/README.md
+*.csv
+*.parquet
+*.pkl
+*.h5
+*.arrow
+*.tar.gz
+*.zip
+
+# Environment & Credentials
+.env
+.env.local
+*.pem
+*.key
+credentials.json
+
+# Python & Caches
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Model checkpoints and weights (except gitkeep)
+models/*
+!models/.gitkeep
+
+# Generated Reports & Charts (except gitkeep)
+reports/*
+!reports/.gitkeep
+!reports/README.md
+images/*
+!images/.gitkeep
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Social Listening & Brand Sentiment Report - {{ brand_name }}</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 1.5cm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                font-size: 8pt;
+                color: #718096;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2D3748;
+            background-color: #FFFFFF;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            font-size: 10pt;
+        }
+        .header {
+            border-bottom: 2px solid #E2E8F0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .brand-title {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #1A202C;
+            margin: 0 0 4px 0;
+        }
+        .brand-subtitle {
+            font-size: 11pt;
+            color: #4A5568;
+            margin: 0;
+        }
+        .metadata-box {
+            text-align: right;
+            font-size: 9pt;
+            color: #718096;
+        }
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+        .kpi-card {
+            display: table-cell;
+            width: 25%;
+            background-color: #F7FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        .kpi-card + .kpi-card {
+            margin-left: 10px;
+        }
+        .kpi-label {
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #718096;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .kpi-value {
+            font-size: 18pt;
+            font-weight: 700;
+            color: #2B6CB0;
+        }
+        .kpi-positive { color: #38A169; }
+        .kpi-negative { color: #E53E3E; }
+        .kpi-neutral { color: #D69E2E; }
+
+        /* Section Layout */
+        .section-title {
+            font-size: 13pt;
+            font-weight: 700;
+            color: #2D3748;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 9pt;
+        }
+        th {
+            background-color: #EDF2F7;
+            color: #4A5568;
+            font-weight: 600;
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid #CBD5E0;
+        }
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        tr:nth-child(even) {
+            background-color: #F7FAFC;
+        }
+        /* Alert Box */
+        .alert-banner {
+            background-color: #FFF5F5;
+            border-left: 4px solid #E53E3E;
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .alert-title {
+            color: #C53030;
+            font-weight: 700;
+            font-size: 9.5pt;
+            margin: 0 0 3px 0;
+        }
+        .alert-desc {
+            color: #742A2A;
+            margin: 0;
+            font-size: 8.5pt;
+        }
+        /* Visual Chart Embed */
+        .chart-container {
+            text-align: center;
+            margin: 15px 0 20px 0;
+        }
+        .chart-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 7.5pt;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+        .badge-positive { background-color: #C6F6D5; color: #22543D; }
+        .badge-negative { background-color: #FED7D7; color: #742A2A; }
+        .badge-neutral  { background-color: #FEFCBF; color: #744210; }
+        .footer {
+            margin-top: 30px;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 10px;
+            font-size: 8pt;
+            color: #A0AEC0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1 class="brand-title">Brand Sentiment Executive Briefing</h1>
+            <p class="brand-subtitle">Real-Time Listening Intelligence: <strong>{{ brand_name }}</strong></p>
+        </div>
+        <div class="metadata-box">
+            <div><strong>Report Date:</strong> {{ report_date }}</div>
+            <div><strong>Generated:</strong> {{ generation_timestamp }}</div>
+            <div><strong>Sources:</strong> Bluesky Firehose, Reddit PRAW</div>
+        </div>
+    </div>
+
+    <!-- Crisis Banner If Applicable -->
+    {% if crisis_alerts %}
+    <div class="alert-banner">
+        <div class="alert-title">⚠ STATISTICAL CHANGE-POINT DETECTED (CUSUM CRITICAL TRIGGER)</div>
+        <div class="alert-desc">
+            {{ crisis_alerts|length }} anomaly event(s) crossed statistical significance thresholds today.
+            Most recent: {{ crisis_alerts[0].summary }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Top KPI Grid -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-label">Net Sentiment Score (NSS)</div>
+            <div class="kpi-value {% if kpis.nss > 20 %}kpi-positive{% elif kpis.nss < 0 %}kpi-negative{% else %}kpi-neutral{% endif %}">
+                {% if kpis.nss > 0 %}+{% endif %}{{ kpis.nss }}
+            </div>
+            <small style="color: #718096; font-size: 7.5pt;">Range: -100 to +100</small>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Total Posts Monitored</div>
+            <div class="kpi-value">{{ kpis.total_volume }}</div>
+            <small style="color: #718096; font-size: 7.5pt;">Clean posts (spam rejected)</small>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Positive / Negative Ratio</div>
+            <div class="kpi-value kpi-positive">{{ kpis.positive_volume }} <span style="color:#A0AEC0; font-size:12pt;">/</span> <span class="kpi-negative">{{ kpis.negative_volume }}</span></div>
+            <small style="color: #718096; font-size: 7.5pt;">Neutral: {{ kpis.neutral_volume }}</small>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">CUSUM Anomaly Triggers</div>
+            <div class="kpi-value {% if kpis.crisis_count > 0 %}kpi-negative{% else %}kpi-positive{% endif %}">
+                {{ kpis.crisis_count }}
+            </div>
+            <small style="color: #718096; font-size: 7.5pt;">15-min rolling deviations</small>
+        </div>
+    </div>
+
+    <!-- Visual Sentiment Chart Embed -->
+    {% if chart_base64 %}
+    <div class="chart-container">
+        <img class="chart-image" src="data:image/png;base64,{{ chart_base64 }}" alt="Sentiment Trends" />
+    </div>
+    {% endif %}
+
+    <!-- Aspect-Based Sentiment Breakdown -->
+    <div class="section-title">1. Aspect-Level Sentiment Performance</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Brand Aspect Dimension</th>
+                <th>Avg Score (-1 to +1)</th>
+                <th>Positive %</th>
+                <th>Neutral %</th>
+                <th>Negative %</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asp in aspect_metrics %}
+            <tr>
+                <td><strong>{{ asp.aspect|replace("_", " ")|title }}</strong></td>
+                <td>
+                    <span class="badge {% if asp.score > 0.15 %}badge-positive{% elif asp.score < -0.15 %}badge-negative{% else %}badge-neutral{% endif %}">
+                        {% if asp.score > 0 %}+{% endif %}{{ "%.2f"|format(asp.score) }}
+                    </span>
+                </td>
+                <td style="color: #38A169;">{{ "%.1f"|format(asp.positive_pct) }}%</td>
+                <td style="color: #718096;">{{ "%.1f"|format(asp.neutral_pct) }}%</td>
+                <td style="color: #E53E3E;"><strong>{{ "%.1f"|format(asp.negative_pct) }}%</strong></td>
+                <td>{{ asp.mention_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Cross-Platform Comparison -->
+    <div class="section-title">2. Cross-Platform Comparison</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Platform</th>
+                <th>Share of Voice</th>
+                <th>Net Sentiment (NSS)</th>
+                <th>Avg Polarity Score</th>
+                <th>Engagement Velocity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plat in platform_metrics %}
+            <tr>
+                <td><strong>{{ plat.platform|title }}</strong></td>
+                <td>{{ plat.volume }} posts ({{ plat.share_pct }}%)</td>
+                <td>
+                    <span class="badge {% if plat.nss > 10 %}badge-positive{% elif plat.nss < 0 %}badge-negative{% else %}badge-neutral{% endif %}">
+                        {% if plat.nss > 0 %}+{% endif %}{{ plat.nss }}
+                    </span>
+                </td>
+                <td>{{ "%.2f"|format(plat.avg_score) }}</td>
+                <td>{{ plat.avg_engagement }} interactions/post</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Trending Topic Clusters -->
+    <div class="section-title">3. Emerging Topic Clusters (BERTopic Discovery)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Topic Identifier & Focus</th>
+                <th>Top c-TF-IDF Keywords</th>
+                <th>Volume</th>
+                <th>Net Polarity</th>
+                <th>Sample Representative Post</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for top in trending_topics %}
+            <tr>
+                <td><strong>#{{ top.topic_id }} {{ top.topic_label }}</strong></td>
+                <td><small>{{ top.top_keywords|join(", ") }}</small></td>
+                <td>{{ top.post_count }}</td>
+                <td>
+                    <span class="badge {% if top.mean_sentiment > 0.1 %}badge-positive{% elif top.mean_sentiment < -0.1 %}badge-negative{% else %}badge-neutral{% endif %}">
+                        {% if top.mean_sentiment > 0 %}+{% endif %}{{ "%.2f"|format(top.mean_sentiment) }}
+                    </span>
+                </td>
+                <td><small><em>"{{ top.sample_doc }}"</em></small></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Top Negative Influencers & Amplification Risk -->
+    <div class="section-title">4. High-Risk Detractor Amplifiers (PageRank Network Centrality)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Author Identifier</th>
+                <th>Platform</th>
+                <th>PageRank Centrality</th>
+                <th>Negative Volume</th>
+                <th>Amplification Risk Index</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for amp in top_amplifiers %}
+            <tr>
+                <td><strong>{{ amp.author_handle }}</strong></td>
+                <td>{{ amp.platform|title }}</td>
+                <td>{{ "%.6f"|format(amp.pagerank_score) }}</td>
+                <td style="color: #E53E3E;">{{ amp.negative_posts }} / {{ amp.total_posts }} posts</td>
+                <td><strong style="color: #C53030;">{{ "%.2f"|format(amp.amplification_risk_score) }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+        Automated Pipeline Report &bull; Powered by DistilBERT ABSA, CUSUM Control Charts & BERTopic &bull; Confidentially generated for Enterprise PR & Brand Operations.
+    </div>
+
+</body>
+</html>
