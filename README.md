@@ -1,7 +1,7 @@
 # Real-Time Social Listening & Crisis Detection Pipeline
 
 [![DistilBERT](https://img.shields.io/badge/NLP-DistilBERT-FFA800?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/) [![Apache Airflow](https://img.shields.io/badge/Airflow-ETL_DAGs-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)](https://airflow.apache.org/) [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Author](https://img.shields.io/badge/Author-Abdussatar-E50914?style=for-the-badge&logo=github&logoColor=white)](https://github.com/satarabdus692-bot)
+[![Author](https://img.shields.io/badge/Author-Abdussatar-E50914?style=for-the-badge&logo=github&logoColor=white)](https://github.com/abdussatarkhan)
 
 > **An asynchronous stream processing pipeline capturing Bluesky and Reddit firehoses, running DistilBERT transformer sentiment inference, and detecting brand perception anomalies via Cumulative Sum (CUSUM) statistical control charts.**
 
@@ -42,7 +42,7 @@ graph TD
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/satarabdus692-bot/social-sentiment-pipeline.git
+git clone https://github.com/abdussatarkhan/social-sentiment-pipeline.git
 cd social-sentiment-pipeline
 ```
 
@@ -60,8 +60,8 @@ pip install -r requirements.txt
 
 ## 👨‍💻 Author & Profile
 
-Built and maintained by **Abdussatar** ([@satarabdus692-bot](https://github.com/satarabdus692-bot)).  
-For technical discussions, collaboration, or queries, feel free to reach out via [LinkedIn](https://www.linkedin.com/in/abdus-satar-5150813b5/) or [GitHub](https://github.com/satarabdus692-bot).
+Built and maintained by **Abdussatar** ([@abdussatarkhan](https://github.com/abdussatarkhan)).  
+For technical discussions, collaboration, or queries, feel free to reach out via [LinkedIn](https://www.linkedin.com/in/abdus-satar-5150813b5/) or [GitHub](https://github.com/abdussatarkhan).
 
 ---
 
