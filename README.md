@@ -1,5 +1,6 @@
 # Real-Time Social Listening & Crisis Detection Pipeline
 
+[![CI](https://github.com/abdussatarkhan/social-sentiment-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/abdussatarkhan/social-sentiment-pipeline/actions)
 [![DistilBERT](https://img.shields.io/badge/NLP-DistilBERT-FFA800?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/) [![Apache Airflow](https://img.shields.io/badge/Airflow-ETL_DAGs-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)](https://airflow.apache.org/) [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Author](https://img.shields.io/badge/Author-Abdussatar-E50914?style=for-the-badge&logo=github&logoColor=white)](https://github.com/abdussatarkhan)
 
@@ -55,6 +56,16 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 # Install dependencies (if requirements.txt exists)
 pip install -r requirements.txt
 ```
+
+---
+
+## 🗺️ Roadmap & Upcoming Features
+
+- [x] DistilBERT transformer sentiment classification
+- [x] Cumulative Sum (CUSUM) crisis anomaly detection
+- [ ] Multi-lingual sentiment inference via XLM-RoBERTa (Urdu, Arabic, Spanish)
+- [ ] Apache Airflow production DAG orchestration
+- [ ] Grafana live dashboard export with Telegram webhook alerts
 
 ---
 
