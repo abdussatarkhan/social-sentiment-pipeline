@@ -6,7 +6,17 @@
 # **Technique:** Cumulative Sum (CUSUM) Control Chart for Sequential Change-Point Detection  
 # 
 # ---
-# ### Why CUSUM?
+# ### Statistical Formulation of Two-Sided CUSUM:
+The Page-Hinkley cumulative sum algorithm updates upper and lower decision statistics sequentially:
+$$S_t^+ = \max(0, S_{t-1}^+ + (X_t - \mu_0 - k))$$
+$$S_t^- = \max(0, S_{t-1}^- - (X_t - \mu_0 + k))$$
+
+where:
+- $\mu_0$: In-control baseline negative sentiment ratio
+- $k = \frac{\delta}{2} \sigma$: Reference allowance parameter for minimum detectable shift $\delta$
+- $h$: Alarm threshold bounding the in-control Average Run Length ($\text{ARL}_0 \ge 1000$)
+
+### Why CUSUM?
 # Simple moving-average or threshold-based alerts suffer from two major flaws:
 # 1. **High False-Positive Rate:** High natural variance in social sentiment causes spurious alarms during low-volume periods.
 # 2. **Detection Lag:** Naive smoothing buffers take too long to register sustained, subtle declines in consumer trust.
